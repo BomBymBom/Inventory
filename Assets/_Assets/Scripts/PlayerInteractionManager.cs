@@ -1,44 +1,87 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 /// <summary>
-/// Handles player interactions with items on the ground using PlayerInput.
+/// Manages player interaction with items in range, highlighting only the first one.
 /// </summary>
 public class PlayerInteractionManager : MonoBehaviour
 {
-    [SerializeField] private float interactionDistance = 2f;
     private PlayerInput playerInput;
     private InputAction interactAction;
+
+    // List to track all items in range, first one is the active item.
+    private List<ItemPickup> itemsInRange = new List<ItemPickup>();
 
     private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
-        var uiMap = playerInput.actions.FindActionMap("UI", true);
-        // Presupunem că există o acțiune "Interact" în action map-ul "UI"
+        var uiMap = playerInput.actions.FindActionMap("Player", true);
+
         interactAction = uiMap.FindAction("Interact", true);
+        interactAction.performed += OnInteractPerformed;
+
         interactAction.Enable();
     }
 
-    private void Update()
+    private void OnDestroy()
     {
-        if (interactAction.triggered)
+        if (interactAction != null)
         {
-            TryInteract();
+            interactAction.performed -= OnInteractPerformed;
         }
     }
 
-    private void TryInteract()
+    private void OnInteractPerformed(InputAction.CallbackContext context)
     {
-        // Raycast în fața jucătorului sau în zona în care poate fi itemul
-        // Presupunem că player-ul are un transform și privim în direcția forward
-        Ray ray = new Ray(transform.position, transform.forward);
-        if (Physics.Raycast(ray, out RaycastHit hit, interactionDistance))
+        TryPickupCurrentItem();
+    }
+
+    /// <summary>
+    /// Called when an item enters the interaction range.
+    /// </summary>
+    public void NotifyItemInRange(ItemPickup pickup)
+    {
+        if (!itemsInRange.Contains(pickup))
         {
-            ItemPickup pickup = hit.collider.GetComponent<ItemPickup>();
-            if (pickup != null)
-            {
-                pickup.TryPickupItem();
-            }
+            itemsInRange.Add(pickup);
+            UpdateHighlight();
+        }
+    }
+
+    /// <summary>
+    /// Called when an item leaves the interaction range.
+    /// </summary>
+    public void NotifyItemOutOfRange(ItemPickup pickup)
+    {
+        if (itemsInRange.Contains(pickup))
+        {
+            pickup.SetHighlight(false);
+            itemsInRange.Remove(pickup);
+            UpdateHighlight();
+        }
+    }
+
+    /// <summary>
+    /// Updates the highlight state for the first item in range.
+    /// </summary>
+    private void UpdateHighlight()
+    {
+        for (int i = 0; i < itemsInRange.Count; i++)
+        {
+            bool isHighlighted = (i == 0);
+            itemsInRange[i].SetHighlight(isHighlighted);
+        }
+    }
+
+    /// <summary>
+    /// Picks up the current item if available.
+    /// </summary>
+    private void TryPickupCurrentItem()
+    {
+        if (itemsInRange.Count > 0)
+        {
+            itemsInRange[0].TryPickupItem();
         }
     }
 }

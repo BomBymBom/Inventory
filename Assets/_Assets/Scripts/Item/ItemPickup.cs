@@ -1,58 +1,71 @@
 using UnityEngine;
 
 /// <summary>
-/// Represents an item lying on the ground that can be picked up by the player.
-/// Attach this script to a GameObject with a collider (trigger).
+/// Represents an item that can be picked up by the player.
+/// Includes logic for managing its highlight UI.
 /// </summary>
 public class ItemPickup : MonoBehaviour
 {
     [SerializeField] private ItemType itemType;
     [SerializeField] private int quantity = 1;
+    [SerializeField] private GameObject highlightUI;
 
-    private Item item;
-    private bool playerInRange = false;
+    private PlayerInteractionManager playerInteractionManager;
 
     private void Start()
     {
         // Create the item using the ItemFactory
-        item = GameManager.Instance.ItemFactory.CreateItem(itemType);
+        var item = GameManager.Instance.ItemFactory.CreateItem(itemType);
+
+        // Instantiate the highlight UI, but keep it inactive
+        highlightUI.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // If the player enters the trigger range
         if (other.CompareTag("Player"))
         {
-            playerInRange = true;
+            playerInteractionManager = other.GetComponent<PlayerInteractionManager>();
+            if (playerInteractionManager != null)
+            {
+                playerInteractionManager.NotifyItemInRange(this);
+            }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        // If the player leaves the trigger range
         if (other.CompareTag("Player"))
         {
-            playerInRange = false;
+            if (playerInteractionManager != null)
+            {
+                playerInteractionManager.NotifyItemOutOfRange(this);
+                playerInteractionManager = null;
+            }
         }
     }
 
-    /// <summary>
-    /// Call this method when the player presses the interaction button (e.g., 'E') while in range.
-    /// </summary>
     public void TryPickupItem()
     {
-        if (playerInRange && item != null)
+        // Player tries to pick up the item
+        bool added = GameManager.Instance.PlayerInventory.AddItem(GameManager.Instance.ItemFactory.CreateItem(itemType), quantity);
+        if (added)
         {
-            bool added = GameManager.Instance.PlayerInventory.AddItem(item, quantity);
-            if (added)
-            {
-                // Item added successfully, remove from world
-                Destroy(gameObject);
-            }
-            else
-            {
-                Debug.Log("Inventory is full, cannot pick up item.");
-            }
+            playerInteractionManager.NotifyItemOutOfRange(this);
+            playerInteractionManager = null;
+            Destroy(gameObject);
+        }
+        else
+        {
+            Debug.Log("Inventory is full, cannot pick up item.");
+        }
+    }
+
+    public void SetHighlight(bool active)
+    {
+        if (highlightUI != null)
+        {
+            highlightUI.SetActive(active);
         }
     }
 }
