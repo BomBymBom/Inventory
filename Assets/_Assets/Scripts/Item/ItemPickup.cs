@@ -10,7 +10,7 @@ public class ItemPickup : MonoBehaviour
     [SerializeField] private int quantity = 1;
     [SerializeField] private GameObject highlightUI;
 
-    private PlayerInteractionManager playerInteractionManager;
+    private PlayerInteractions playerInteractionManager;
 
     private void Start()
     {
@@ -25,7 +25,7 @@ public class ItemPickup : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            playerInteractionManager = other.GetComponent<PlayerInteractionManager>();
+            playerInteractionManager = other.GetComponent<PlayerInteractions>();
             if (playerInteractionManager != null)
             {
                 playerInteractionManager.NotifyItemInRange(this);

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 /// <summary>
 /// Manages player interaction with items in range, highlighting only the first one.
 /// </summary>
-public class PlayerInteractionManager : MonoBehaviour
+public class PlayerInteractions : MonoBehaviour
 {
     private PlayerInput playerInput;
     private InputAction interactAction;

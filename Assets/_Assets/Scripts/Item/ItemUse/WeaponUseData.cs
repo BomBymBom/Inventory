@@ -5,6 +5,7 @@ public class WeaponUseData : ItemUseData
 {
     public override void Use(Item item, Character character)
     {
-        Debug.Log($"{item.ItemName} weapon used. (Placeholder action)");
+        GameManager.Instance.PlayerEquipment.EquipItem(item);
+
     }
 }

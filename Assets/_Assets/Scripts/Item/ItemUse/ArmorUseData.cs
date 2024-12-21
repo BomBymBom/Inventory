@@ -5,6 +5,6 @@ public class ArmorUseData : ItemUseData
 {
     public override void Use(Item item, Character character)
     {
-        Debug.Log($"{item.ItemName} armor equipped. (Placeholder action)");
+        GameManager.Instance.PlayerEquipment.EquipItem(item);
     }
 }

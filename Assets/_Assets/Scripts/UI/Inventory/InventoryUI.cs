@@ -1,16 +1,11 @@
-using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine;
 
-/// <summary>
-/// Responsible for displaying the Inventory data on the UI.
-/// Subscribes to OnInventoryChanged and updates its visual slots accordingly.
-/// </summary>
 public class InventoryUI : MonoBehaviour
 {
     [SerializeField] private Inventory playerInventory;
-    [SerializeField] private Transform inventoryPanel; // A parent Transform that holds inventory slot UI elements
-    [SerializeField] private GameObject slotUIPrefab; // A prefab for each inventory slot
+    [SerializeField] private Transform inventoryPanel;
+    [SerializeField] private GameObject slotUIPrefab;
 
     private List<InventorySlotUI> slotUIs = new List<InventorySlotUI>();
 
@@ -20,6 +15,7 @@ public class InventoryUI : MonoBehaviour
         {
             playerInventory.OnInventoryChanged += UpdateUI;
         }
+        UpdateUI();
     }
 
     private void OnDisable()
@@ -32,7 +28,13 @@ public class InventoryUI : MonoBehaviour
 
     private void Start()
     {
-        // Create UI slots depending on how many slots the Inventory has
+        if (playerInventory == null && GameManager.Instance != null)
+        {
+            playerInventory = GameManager.Instance.PlayerInventory;
+
+            playerInventory.OnInventoryChanged += UpdateUI;
+        }
+        // Creăm sloturile UI în funcție de câte sloturi are inventarul
         var slots = playerInventory.GetSlots();
         foreach (var slot in slots)
         {
@@ -45,10 +47,8 @@ public class InventoryUI : MonoBehaviour
         UpdateUI();
     }
 
-    /// <summary>
-    /// Called when the inventory changes, updates the icons and counts for each slot.
-    /// </summary>
-    private void UpdateUI()
+    // UpdateUI va reîmprospăta toate sloturile UI
+    public void UpdateUI()
     {
         foreach (var slotUI in slotUIs)
         {

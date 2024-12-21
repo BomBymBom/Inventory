@@ -57,10 +57,7 @@ public class Inventory
             }
         }
 
-        if (count < initialCount)
-        {
-            OnInventoryChanged?.Invoke();
-        }
+        OnInventoryChanged?.Invoke();
 
         // If still items left that we couldn't add, return false
         return count <= 0;
@@ -83,10 +80,8 @@ public class Inventory
             }
         }
 
-        if (removedCount > 0)
-        {
-            OnInventoryChanged?.Invoke();
-        }
+
+        OnInventoryChanged?.Invoke();
 
         return removedCount;
     }
@@ -105,5 +100,10 @@ public class Inventory
     public List<InventorySlot> GetSlots()
     {
         return slots;
+    }
+
+    public void ForceInventoryUpdate()
+    {
+        OnInventoryChanged?.Invoke();
     }
 }

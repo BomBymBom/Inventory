@@ -1,10 +1,11 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class InventorySlotUI : MonoBehaviour
 {
     [SerializeField] private Image itemIcon;
-    [SerializeField] private Text stackCountText;
+    [SerializeField] private TMP_Text stackCountText;
 
     private InventorySlot slot;
 

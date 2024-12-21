@@ -20,6 +20,7 @@ public class EquipmentUI : MonoBehaviour
         {
             equipmentSystem.OnEquipmentChanged += UpdateUI;
         }
+        UpdateUI();
     }
 
     private void OnDisable()
@@ -32,6 +33,11 @@ public class EquipmentUI : MonoBehaviour
 
     private void Start()
     {
+        if (equipmentSystem == null && GameManager.Instance != null)
+        {
+            equipmentSystem = GameManager.Instance.PlayerEquipment;
+            equipmentSystem.OnEquipmentChanged += UpdateUI;
+        }
         // Assume we know which ItemTypes we have. For simplicity, let's say we have Weapon and Armor slots.
         CreateEquipmentSlotUI(ItemType.Weapon);
         CreateEquipmentSlotUI(ItemType.Armor);
