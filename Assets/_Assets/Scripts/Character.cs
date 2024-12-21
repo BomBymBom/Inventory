@@ -13,8 +13,12 @@ public class Character : MonoBehaviour
     [SerializeField] private GameObject armorMesh;
     private void OnEnable()
     {
+        if (equipmentSystem == null)
+            equipmentSystem = GameManager.Instance.PlayerEquipment;
+
         if (equipmentSystem != null)
         {
+            Debug.Log(1111);
             equipmentSystem.OnEquipmentChanged += UpdateModel;
         }
     }
