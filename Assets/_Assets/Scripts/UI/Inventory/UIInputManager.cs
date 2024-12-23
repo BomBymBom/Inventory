@@ -206,11 +206,12 @@ public class UIInputManager : MonoBehaviour
         if (targetSlotUI == null)
             targetEquipUI = RaycastFor<EquipmentSlotUI>(cursorPos);
 
+        int stackCount = originalSlot?.CurrentStackCount ?? 1;
         // Dacă item-ul venea din inventar
         if (originalSlot != null && draggedItem != null)
         {
             // Scoatem item-ul din inventar (1 bucată)
-            GameManager.Instance.PlayerInventory.RemoveItem(draggedItem, 1);
+            GameManager.Instance.PlayerInventory.RemoveItem(draggedItem, stackCount);
             if (targetSlotUI != null)
             {
                 if (!targetSlotUI.Slot.IsEmpty())
@@ -232,7 +233,7 @@ public class UIInputManager : MonoBehaviour
                 }
                 else
                 {
-                    targetSlotUI.Slot.AddItem(draggedItem, 1);
+                    targetSlotUI.Slot.AddItem(draggedItem, stackCount);
                 }
 
             }
@@ -246,13 +247,13 @@ public class UIInputManager : MonoBehaviour
                 else
                 {
                     // dacă nu a putut fi echipat, îl adăugăm înapoi în inventar
-                    GameManager.Instance.PlayerInventory.AddItem(draggedItem, 1);
+                    GameManager.Instance.PlayerInventory.AddItem(draggedItem, stackCount);
                 }
             }
             else
             {
                 // Aruncăm pe jos
-                GameManager.Instance.DropItemOnGround(draggedItem);
+                GameManager.Instance.DropItemOnGround(draggedItem, stackCount);
             }
         }
 
@@ -263,7 +264,7 @@ public class UIInputManager : MonoBehaviour
             if (targetSlotUI != null)
             {
                 // Pune item-ul în inventar
-                GameManager.Instance.PlayerInventory.AddItem(draggedItem, 1);
+                GameManager.Instance.PlayerInventory.AddItem(draggedItem, stackCount);
             }
             else if (targetEquipUI != null && targetEquipUI.SlotType != originalEquipSlotType)
             {
@@ -271,13 +272,13 @@ public class UIInputManager : MonoBehaviour
                 if (!GameManager.Instance.PlayerEquipment.EquipItem(draggedItem))
                 {
                     // Dacă nu se potrivește, îl punem înapoi în inventar
-                    GameManager.Instance.PlayerInventory.AddItem(draggedItem, 1);
+                    GameManager.Instance.PlayerInventory.AddItem(draggedItem, stackCount);
                 }
             }
             else
             {
                 // Aruncă pe jos
-                GameManager.Instance.DropItemOnGround(draggedItem);
+                GameManager.Instance.DropItemOnGround(draggedItem, stackCount);
             }
         }
 

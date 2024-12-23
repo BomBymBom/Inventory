@@ -55,6 +55,11 @@ public class Inventory
                     if (count <= 0) break;
                 }
             }
+
+            if (count > 0)
+            {
+                GameManager.Instance.DropItemOnGround(item, count);
+            }
         }
 
         OnInventoryChanged?.Invoke();

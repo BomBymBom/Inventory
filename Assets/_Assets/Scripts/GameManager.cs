@@ -48,12 +48,58 @@ public class GameManager : MonoBehaviour
     /// Drops the given item on the ground. In a real scenario, 
     /// this would Instantiate an ItemPickup prefab at player’s position.
     /// </summary>
-    public void DropItemOnGround(Item item)
+    public void DropItemOnGround(Item item, int quantity)
     {
-        // Placeholder logic
-        Debug.Log($"Dropped {item.ItemName} on the ground.");
-        // Example:
-        // Vector3 dropPosition = PlayerCharacter.transform.position + PlayerCharacter.transform.forward * 1f;
-        // Instantiate(itemPickupPrefab, dropPosition, Quaternion.identity).SetItem(item);
+        if (item.ItemPrefab == null)
+        {
+            Debug.LogError($"Item {item.ItemName} does not have a prefab assigned!");
+            return;
+        }
+
+        // Poziția de drop: puțin în fața jucătorului
+        Vector3 dropPosition = playerCharacter.transform.position + playerCharacter.transform.forward * 1f;
+
+        // Instanțiază prefab-ul
+        GameObject pickupObj = Instantiate(item.ItemPrefab, dropPosition, Quaternion.identity);
+
+        // Configurează scriptul `ItemPickup` dacă există
+        ItemPickup itemPickup = pickupObj.GetComponent<ItemPickup>();
+        if (itemPickup != null)
+        {
+            itemPickup.Initialize(item, quantity);
+        }
     }
+    public void SpawnItemInScene(ItemType type, int quantity, Transform position)
+    {
+        // Creează un obiect folosind fabrica
+        var item = ItemFactory.CreateItem(type);
+        if (item == null)
+        {
+            Debug.LogWarning($"Item of type {type} could not be created!");
+            return;
+        }
+
+        // Generează prefab-ul asociat cu tipul de obiect
+        var prefab = item.ItemPrefab; // Verificăm că prefab-ul este configurat corect
+        if (prefab == null)
+        {
+            Debug.LogError($"No prefab assigned for {type} in ItemFactory!");
+            return;
+        }
+
+        // Instanțiază prefab-ul în scenă
+        var spawnedObject = Instantiate(prefab, position.position, Quaternion.identity);
+        var itemPickup = spawnedObject.GetComponent<ItemPickup>();
+        if (itemPickup != null)
+        {
+            // Inițializează scriptul de pick-up cu tipul de obiect și cantitatea
+            itemPickup.Initialize(item, quantity);
+        }
+        else
+        {
+            Debug.LogError($"Prefab {prefab.name} does not have an ItemPickup component!");
+        }
+    }
+
+
 }

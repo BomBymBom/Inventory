@@ -11,11 +11,13 @@ public class ItemData : ScriptableObject
     [SerializeField] private Sprite itemIcon;
     [SerializeField] private ItemType itemType;
     [SerializeField] private int maxStackCount = 1;
+    [SerializeField] private GameObject itemPrefab;
     [SerializeField] private ItemUseData itemUseData; // Could be null if no usage
 
     public string ItemName => itemName;
     public Sprite ItemIcon => itemIcon;
     public ItemType ItemType => itemType;
     public int MaxStackCount => maxStackCount;
+    public GameObject ItemPrefab => itemPrefab;
     public ItemUseData ItemUseData => itemUseData;
 }

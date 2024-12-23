@@ -11,20 +11,18 @@ public class Item
     public Sprite ItemIcon { get; private set; }
     public ItemType ItemType { get; private set; }
     public int MaxStackCount { get; private set; }
-
+    public GameObject ItemPrefab { get; private set; }
     private ItemUseData useStrategy;
 
-    public Item(string itemName, Sprite icon, ItemType itemType, int maxStackCount)
+    public Item(string itemName, Sprite icon, ItemType itemType, int maxStackCount, GameObject itemPrefab)
     {
         this.ItemName = itemName;
         this.ItemIcon = icon;
         this.ItemType = itemType;
         this.MaxStackCount = maxStackCount;
+        this.ItemPrefab = itemPrefab;
     }
 
-    /// <summary>
-    /// Set the strategy this item uses when the player attempts to use it.
-    /// </summary>
     public void SetUseStrategy(ItemUseData strategy)
     {
         this.useStrategy = strategy;

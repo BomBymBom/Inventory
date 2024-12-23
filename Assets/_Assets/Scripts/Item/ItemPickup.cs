@@ -6,21 +6,26 @@ using UnityEngine;
 /// </summary>
 public class ItemPickup : MonoBehaviour
 {
-    [SerializeField] private ItemType itemType;
-    [SerializeField] private int quantity = 1;
     [SerializeField] private GameObject highlightUI;
 
+    private Item itemData;
+    private int quantity;
     private PlayerInteractions playerInteractionManager;
 
     private void Start()
     {
-        // Create the item using the ItemFactory
-        var item = GameManager.Instance.ItemFactory.CreateItem(itemType);
-
-        // Instantiate the highlight UI, but keep it inactive
         highlightUI.SetActive(false);
     }
-
+    /// <summary>
+    /// Initializes the ItemPickup with data about the item and its quantity.
+    /// </summary>
+    /// <param name="item">The item data associated with this pickup.</param>
+    /// <param name="quantity">The quantity of the item.</param>
+    public void Initialize(Item item, int quantity)
+    {
+        this.itemData = item;
+        this.quantity = quantity;
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -47,12 +52,12 @@ public class ItemPickup : MonoBehaviour
 
     public void TryPickupItem()
     {
-        // Player tries to pick up the item
-        bool added = GameManager.Instance.PlayerInventory.AddItem(GameManager.Instance.ItemFactory.CreateItem(itemType), quantity);
+        if (itemData == null) return;
+
+        bool added = GameManager.Instance.PlayerInventory.AddItem(itemData, quantity);
         if (added)
         {
-            playerInteractionManager.NotifyItemOutOfRange(this);
-            playerInteractionManager = null;
+            playerInteractionManager?.NotifyItemOutOfRange(this);
             Destroy(gameObject);
         }
         else

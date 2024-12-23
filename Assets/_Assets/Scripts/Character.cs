@@ -18,7 +18,6 @@ public class Character : MonoBehaviour
 
         if (equipmentSystem != null)
         {
-            Debug.Log(1111);
             equipmentSystem.OnEquipmentChanged += UpdateModel;
         }
     }
