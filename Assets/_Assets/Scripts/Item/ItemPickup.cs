@@ -58,12 +58,13 @@ public class ItemPickup : MonoBehaviour
         if (added)
         {
             playerInteractionManager?.NotifyItemOutOfRange(this);
-            Destroy(gameObject);
         }
         else
         {
             Debug.Log("Inventory is full, cannot pick up item.");
         }
+
+        Destroy(gameObject);
     }
 
     public void SetHighlight(bool active)

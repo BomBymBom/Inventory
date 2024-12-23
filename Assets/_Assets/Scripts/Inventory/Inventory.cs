@@ -30,8 +30,6 @@ public class Inventory
     /// </summary>
     public bool AddItem(Item item, int count)
     {
-        int initialCount = count;
-
         // First, try to stack into existing slots of the same item type
         foreach (var slot in slots)
         {
@@ -58,7 +56,7 @@ public class Inventory
 
             if (count > 0)
             {
-                GameManager.Instance.DropItemOnGround(item, count);
+                GameManager.Instance.ItemSpawner.DropItemOnGround(item, count);
             }
         }
 
@@ -76,7 +74,7 @@ public class Inventory
         int removedCount = 0;
         foreach (var slot in slots)
         {
-            if (slot.StoredItem != null && slot.StoredItem.ItemName == item.ItemName)
+            if (slot.StoredItem == item)
             {
                 int removed = slot.RemoveItem(count);
                 removedCount += removed;

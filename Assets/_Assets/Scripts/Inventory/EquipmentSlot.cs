@@ -22,6 +22,11 @@ public class EquipmentSlot
         // For simplicity, let's say the slot can only hold the same ItemType.
         if (item.ItemType == SlotType)
         {
+            if (EquippedItem != null)
+            {
+                GameManager.Instance.PlayerInventory.AddItem(EquippedItem, 1);
+            }
+
             EquippedItem = item;
             return true;
         }

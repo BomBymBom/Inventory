@@ -32,15 +32,17 @@ public class Item
     /// Called when the item is used by a character (e.g. player).
     /// This method delegates the use logic to the assigned strategy.
     /// </summary>
-    public void UseItem(Character character)
+    public bool UseItem(Character character)
     {
         if (useStrategy != null)
         {
             useStrategy.Use(this, character);
+            return true;
         }
         else
         {
-            UnityEngine.Debug.LogWarning($"No use strategy set for item {ItemName}");
+            Debug.LogWarning($"No use strategy set for item {ItemName}. Item not used.");
+            return false;
         }
     }
 }

@@ -9,8 +9,8 @@ public class Character : MonoBehaviour
     [Header("Equipment")]
     [SerializeField] private EquipmentSystem equipmentSystem;
     // Referințe la game object-ul personajului
-    [SerializeField] private GameObject weaponMesh;
-    [SerializeField] private GameObject armorMesh;
+    [SerializeField] private GameObject weapon;
+    [SerializeField] private GameObject armor;
     private void OnEnable()
     {
         if (equipmentSystem == null)
@@ -36,24 +36,24 @@ public class Character : MonoBehaviour
         var weaponSlot = equipmentSystem.GetEquipmentSlot(ItemType.Weapon);
         if (weaponSlot != null && weaponSlot.EquippedItem != null)
         {
-            weaponMesh.SetActive(true);
+            weapon.SetActive(true);
             // Sau schimbi mesh / sprite
         }
         else
         {
-            weaponMesh.SetActive(false);
+            weapon.SetActive(false);
         }
 
         // 2. Verificăm item-ul echipat la slot-ul "Armor"
         var armorSlot = equipmentSystem.GetEquipmentSlot(ItemType.Armor);
         if (armorSlot != null && armorSlot.EquippedItem != null)
         {
-            armorMesh.SetActive(true);
+            armor.SetActive(true);
             // ... alte schimbări, gen material, mesh etc.
         }
         else
         {
-            armorMesh.SetActive(false);
+            armor.SetActive(false);
         }
     }
     public void RestoreHealth(int amount)

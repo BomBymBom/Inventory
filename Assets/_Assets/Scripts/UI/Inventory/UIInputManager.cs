@@ -96,8 +96,8 @@ public class UIInputManager : MonoBehaviour
         {
             Debug.Log("LeftClick1");
 
-            StartDraggingItem(slotUI.Slot.StoredItem, slotUI.transform.position);
             originalSlot = slotUI.Slot;
+            StartDraggingItem(slotUI.Slot.StoredItem, slotUI.transform.position);
         }
         else if (equipUI != null)
         {
@@ -134,11 +134,7 @@ public class UIInputManager : MonoBehaviour
     private void OnRightClickPerformed(InputAction.CallbackContext context)
     {
         // Dacă dragăm ceva, ignorăm right-click
-        Debug.Log("OnRightClickPerformedreturn");
-
         if (dragging) return;
-        Debug.Log("OnRightClickPerformed");
-
         // Verificăm slotUI sub cursor
         var slotUI = RaycastFor<InventorySlotUI>(currentPointerPos);
         if (slotUI != null && slotUI.Slot != null && slotUI.Slot.StoredItem != null)
@@ -146,9 +142,12 @@ public class UIInputManager : MonoBehaviour
             Debug.Log("Use item");
 
             // Use item
-            slotUI.Slot.StoredItem.UseItem(GameManager.Instance.PlayerCharacter);
-            // Eliminăm unul din stack
-            GameManager.Instance.PlayerInventory.RemoveItem(slotUI.Slot.StoredItem, 1);
+            bool used = slotUI.Slot.StoredItem.UseItem(GameManager.Instance.PlayerCharacter);
+            if (used)
+            {
+                // Elimină doar dacă utilizarea a fost reușită
+                GameManager.Instance.PlayerInventory.RemoveItem(slotUI.Slot.StoredItem, 1);
+            }
             return;
         }
 
@@ -211,7 +210,7 @@ public class UIInputManager : MonoBehaviour
         if (originalSlot != null && draggedItem != null)
         {
             // Scoatem item-ul din inventar (1 bucată)
-            GameManager.Instance.PlayerInventory.RemoveItem(draggedItem, stackCount);
+            GameManager.Instance.PlayerInventory.RemoveItem(originalSlot.StoredItem, stackCount);
             if (targetSlotUI != null)
             {
                 if (!targetSlotUI.Slot.IsEmpty())
@@ -253,7 +252,7 @@ public class UIInputManager : MonoBehaviour
             else
             {
                 // Aruncăm pe jos
-                GameManager.Instance.DropItemOnGround(draggedItem, stackCount);
+                GameManager.Instance.ItemSpawner.DropItemOnGround(draggedItem, stackCount);
             }
         }
 
@@ -278,7 +277,7 @@ public class UIInputManager : MonoBehaviour
             else
             {
                 // Aruncă pe jos
-                GameManager.Instance.DropItemOnGround(draggedItem, stackCount);
+                GameManager.Instance.ItemSpawner.DropItemOnGround(draggedItem, stackCount);
             }
         }
 
