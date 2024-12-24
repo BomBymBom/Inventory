@@ -10,8 +10,8 @@ public class ItemSpawner : MonoBehaviour
         public int quantity;
     }
 
-    [SerializeField] private ItemSpawnData[] itemsToSpawn; // Lista de obiecte care trebuie spaunate
-    [SerializeField] private List<Transform> spawnPoints;  // Lista de puncte de spaunare
+    [SerializeField] private ItemSpawnData[] itemsToSpawn;
+    [SerializeField] private List<Transform> spawnPoints;
     [SerializeField] private Transform parent;
     private List<Item> allItems = new List<Item>();
     public void InitializeSpawner()
@@ -34,12 +34,8 @@ public class ItemSpawner : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Spaunează un item în scenă la locația specificată.
-    /// </summary>
     public void SpawnItemInScene(ItemType type, int quantity, Transform spawnPoint)
     {
-        // Creează un obiect folosind fabrica
         var item = GameManager.Instance.ItemFactory.CreateItem(type);
         if (item == null)
         {
@@ -48,20 +44,18 @@ public class ItemSpawner : MonoBehaviour
         }
 
         allItems.Add(item);
-        // Generează prefab-ul asociat cu tipul de obiect
-        var prefab = item.ItemPrefab; // Verificăm că prefab-ul este configurat corect
+
+        var prefab = item.ItemPrefab;
         if (prefab == null)
         {
             Debug.LogError($"No prefab assigned for {type} in ItemFactory!");
             return;
         }
 
-        // Instanțiază prefab-ul în scenă
         var spawnedObject = Instantiate(prefab, spawnPoint.position, Quaternion.identity, parent);
         var itemPickup = spawnedObject.GetComponent<ItemPickup>();
         if (itemPickup != null)
         {
-            // Inițializează scriptul de pick-up cu tipul de obiect și cantitatea
             itemPickup.Initialize(item, quantity);
         }
         else
@@ -70,9 +64,7 @@ public class ItemSpawner : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Dropează un item pe jos la poziția specificată.
-    /// </summary>
+
     public void DropItemOnGround(Item item, int quantity)
     {
         if (item.ItemPrefab == null)
@@ -83,10 +75,9 @@ public class ItemSpawner : MonoBehaviour
 
         Transform playerPosition = GameManager.Instance.PlayerCharacter.transform;
         Vector3 dropPosition = playerPosition.position + playerPosition.forward * 1f;
-        // Instanțiază prefab-ul
+
         GameObject pickupObj = Instantiate(item.ItemPrefab, dropPosition, Quaternion.identity);
 
-        // Configurează scriptul `ItemPickup` dacă există
         ItemPickup itemPickup = pickupObj.GetComponent<ItemPickup>();
         if (itemPickup != null)
         {

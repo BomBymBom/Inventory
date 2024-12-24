@@ -1,10 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-/// <summary>
-/// The ItemFactory now uses ScriptableObjects (ItemData) to create Items.
-/// You can assign a list of ItemData in the inspector to this factory.
-/// </summary>
 public class ItemFactory : MonoBehaviour
 {
     [SerializeField] private List<ItemData> itemDataList;
@@ -13,7 +9,6 @@ public class ItemFactory : MonoBehaviour
 
     private void Awake()
     {
-        // Build a dictionary for quick lookup by ItemType
         itemDataByType = new Dictionary<ItemType, ItemData>();
         foreach (var data in itemDataList)
         {
@@ -54,8 +49,6 @@ public class ItemFactory : MonoBehaviour
             return newItem;
         }
 
-        Debug.LogWarning($"No ItemData found for ItemType {type}. Returning a generic item.");
-        // If no data found, return a generic item or null.
         return null;
     }
 

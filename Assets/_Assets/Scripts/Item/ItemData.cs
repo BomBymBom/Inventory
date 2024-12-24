@@ -1,8 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// ScriptableObject that holds data for an item: type, name, icon, stack count, and associated use logic.
-/// This allows item configuration from the Unity Editor.
+/// ScriptableObject that holds data for an item
 /// </summary>
 [CreateAssetMenu(fileName = "NewItemData", menuName = "ItemData/GenericItem")]
 public class ItemData : ScriptableObject

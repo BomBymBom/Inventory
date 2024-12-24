@@ -1,9 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Represents an item that can be picked up by the player.
-/// Includes logic for managing its highlight UI.
-/// </summary>
 public class ItemPickup : MonoBehaviour
 {
     [SerializeField] private GameObject highlightUI;
@@ -16,11 +12,7 @@ public class ItemPickup : MonoBehaviour
     {
         highlightUI.SetActive(false);
     }
-    /// <summary>
-    /// Initializes the ItemPickup with data about the item and its quantity.
-    /// </summary>
-    /// <param name="item">The item data associated with this pickup.</param>
-    /// <param name="quantity">The quantity of the item.</param>
+
     public void Initialize(Item item, int quantity)
     {
         this.itemData = item;
@@ -62,6 +54,7 @@ public class ItemPickup : MonoBehaviour
         else
         {
             Debug.Log("Inventory is full, cannot pick up item.");
+            playerInteractionManager?.NotifyItemOutOfRange(this);
         }
 
         Destroy(gameObject);

@@ -1,10 +1,5 @@
-using UnityEngine;
 using UnityEngine.InputSystem;
 
-/// <summary>
-/// A concrete panel for the Inventory. It automatically listens for "ToggleInventory" 
-/// in the "Player" action map and toggles itself on/off.
-/// </summary>
 public class InventoryPanel : UIPanel
 {
     private InputAction toggleInventoryAction;
@@ -13,21 +8,17 @@ public class InventoryPanel : UIPanel
     {
         base.Awake();
 
-        // *** Player map ***
+        // Player map
         var playerMap = panelManager.PlayerInput.actions.FindActionMap("Player", true);
         var playerToggleAction = playerMap.FindAction("ToggleInventory", true);
         playerToggleAction.performed += OnToggleInventory;
         playerToggleAction.Enable();
 
-        // *** UI map ***
+        // UI map
         var uiMap = panelManager.PlayerInput.actions.FindActionMap("UI", true);
         var uiToggleAction = uiMap.FindAction("ToggleInventory", false);
-        // if (uiToggleAction != null)
-        // {
+
         uiToggleAction.performed += OnToggleInventory;
-        // uiToggleAction.Enable();
-        // uiMap?.Enable();
-        // }
     }
 
     private void OnDestroy()

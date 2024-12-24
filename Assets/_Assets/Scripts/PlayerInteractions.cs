@@ -3,14 +3,12 @@ using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
 /// <summary>
-/// Manages player interaction with items in range, highlighting only the first one.
+/// Manages player interaction with items in range.
 /// </summary>
 public class PlayerInteractions : MonoBehaviour
 {
     private PlayerInput playerInput;
     private InputAction interactAction;
-
-    // List to track all items in range, first one is the active item.
     private List<ItemPickup> itemsInRange = new List<ItemPickup>();
 
     private void Awake()
@@ -37,9 +35,6 @@ public class PlayerInteractions : MonoBehaviour
         TryPickupCurrentItem();
     }
 
-    /// <summary>
-    /// Called when an item enters the interaction range.
-    /// </summary>
     public void NotifyItemInRange(ItemPickup pickup)
     {
         if (!itemsInRange.Contains(pickup))
@@ -49,9 +44,6 @@ public class PlayerInteractions : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Called when an item leaves the interaction range.
-    /// </summary>
     public void NotifyItemOutOfRange(ItemPickup pickup)
     {
         if (itemsInRange.Contains(pickup))
@@ -62,9 +54,6 @@ public class PlayerInteractions : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Updates the highlight state for the first item in range.
-    /// </summary>
     private void UpdateHighlight()
     {
         for (int i = 0; i < itemsInRange.Count; i++)
@@ -74,9 +63,6 @@ public class PlayerInteractions : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Picks up the current item if available.
-    /// </summary>
     private void TryPickupCurrentItem()
     {
         if (itemsInRange.Count > 0)

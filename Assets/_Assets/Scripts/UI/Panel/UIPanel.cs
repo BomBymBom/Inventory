@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Base class for any UI panel. It notifies the PanelManager when it's opened or closed.
+/// Base class for any UI panel. Notifies the PanelManager when it's opened or closed.
 /// </summary>
 public class UIPanel : MonoBehaviour
 {
@@ -12,7 +12,6 @@ public class UIPanel : MonoBehaviour
 
     protected virtual void Awake()
     {
-        // Panel is off by default (optional design choice)
         if (panelManager == null)
             panelManager = FindFirstObjectByType<PanelManager>();
 
@@ -20,9 +19,6 @@ public class UIPanel : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    /// <summary>
-    /// Opens this panel, notifying the manager.
-    /// </summary>
     public virtual void OpenPanel()
     {
         if (!isOpen)
@@ -33,9 +29,6 @@ public class UIPanel : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Closes this panel, notifying the manager.
-    /// </summary>
     public virtual void ClosePanel()
     {
         if (isOpen)

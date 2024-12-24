@@ -4,7 +4,6 @@ using UnityEngine;
 
 /// <summary>
 /// Manages a collection of InventorySlots and provides methods to add/remove items.
-/// Also fires events when the inventory changes.
 /// </summary>
 public class Inventory
 {
@@ -23,14 +22,9 @@ public class Inventory
         }
     }
 
-    /// <summary>
-    /// Attempts to add the specified count of the given item.
-    /// If the inventory is full and cannot accept them, returns false.
-    /// Otherwise returns true and updates the slots accordingly.
-    /// </summary>
     public bool AddItem(Item item, int count)
     {
-        // First, try to stack into existing slots of the same item type
+        // Try to stack into existing slots of the same item type
         if (item.IsStackable)
         {
             foreach (var slot in slots)
@@ -44,7 +38,7 @@ public class Inventory
             }
         }
 
-        // If still have items left, try empty slots
+        // Try empty slots
         if (count > 0)
         {
             foreach (var slot in slots)
@@ -65,13 +59,9 @@ public class Inventory
 
         OnInventoryChanged?.Invoke();
 
-        // If still items left that we couldn't add, return false
         return count <= 0;
     }
 
-    /// <summary>
-    /// Removes a certain count of a given item. Returns how many were removed.
-    /// </summary>
     public int RemoveItem(Item item, int count)
     {
         int removedCount = 0;
@@ -92,17 +82,6 @@ public class Inventory
         return removedCount;
     }
 
-    public bool IsFull()
-    {
-        // If there's at least one empty slot or space in a stack, not full.
-        foreach (var slot in slots)
-        {
-            if (slot.IsEmpty()) return false;
-            if (slot.CurrentStackCount < slot.StoredItem.MaxStackCount) return false;
-        }
-        return true;
-    }
-
     public List<InventorySlot> GetSlots()
     {
         return slots;
@@ -115,26 +94,22 @@ public class Inventory
 
     public void ReorganizeInventory(ItemType itemType)
     {
-        // Creăm o listă temporară pentru a stoca obiectele și cantitățile lor
         List<(Item item, int quantity)> itemsToReorganize = new List<(Item, int)>();
 
-        // Găsește toate obiectele de tipul specificat
         foreach (var slot in slots)
         {
             if (!slot.IsEmpty() && slot.StoredItem.ItemType == itemType)
             {
                 itemsToReorganize.Add((slot.StoredItem, slot.CurrentStackCount));
-                slot.RemoveItem(slot.CurrentStackCount); // Golește slotul
+                slot.RemoveItem(slot.CurrentStackCount);
             }
         }
 
-        // Re-adaugă obiectele găsite
         foreach (var (item, quantity) in itemsToReorganize)
         {
             AddItem(item, quantity);
         }
 
-        // Notificăm că inventarul a fost modificat
         OnInventoryChanged?.Invoke();
     }
 

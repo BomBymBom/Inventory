@@ -35,7 +35,6 @@ public class Item
     }
 
     /// <summary>
-    /// Called when the item is used by a character (e.g. player).
     /// This method delegates the use logic to the assigned strategy.
     /// </summary>
     public bool UseItem(Character character)

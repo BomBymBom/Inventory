@@ -4,12 +4,11 @@ using System.Collections.Generic;
 
 /// <summary>
 /// Displays the currently equipped items. 
-/// Subscribes to OnEquipmentChanged from EquipmentSystem.
 /// </summary>
 public class EquipmentUI : MonoBehaviour
 {
     [SerializeField] private EquipmentSystem equipmentSystem;
-    [SerializeField] private Transform equipmentPanel; // parent transform for equipment slots
+    [SerializeField] private Transform equipmentPanel;
     [SerializeField] private GameObject equipmentSlotUIPrefab;
 
     private Dictionary<ItemType, EquipmentSlotUI> slotUIDict = new Dictionary<ItemType, EquipmentSlotUI>();
@@ -38,7 +37,7 @@ public class EquipmentUI : MonoBehaviour
             equipmentSystem = GameManager.Instance.PlayerEquipment;
             equipmentSystem.OnEquipmentChanged += UpdateUI;
         }
-        // Assume we know which ItemTypes we have. For simplicity, let's say we have Weapon and Armor slots.
+
         CreateEquipmentSlotUI(ItemType.Weapon);
         CreateEquipmentSlotUI(ItemType.Armor);
 

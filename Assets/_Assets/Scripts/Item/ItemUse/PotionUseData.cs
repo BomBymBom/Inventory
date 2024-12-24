@@ -12,6 +12,5 @@ public class PotionUseData : ItemUseData
     {
         character.RestoreHealth(healAmount);
         Debug.Log($"{item.ItemName} used. Restored {healAmount} health.");
-        // You might also want to remove one stack of this item from the inventory externally.
     }
 }

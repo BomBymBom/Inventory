@@ -12,14 +12,8 @@ public class EquipmentSlot
         EquippedItem = null;
     }
 
-    /// <summary>
-    /// Equip the given item if it matches the slot type.
-    /// Returns true if equipped successfully, false otherwise.
-    /// </summary>
     public bool EquipItem(Item item)
     {
-        // In a real scenario, you'd match specific item types to slot types.
-        // For simplicity, let's say the slot can only hold the same ItemType.
         if (item.ItemType == SlotType)
         {
             if (EquippedItem != null)
@@ -33,9 +27,6 @@ public class EquipmentSlot
         return false;
     }
 
-    /// <summary>
-    /// Unequips the current item from this slot.
-    /// </summary>
     public Item UnequipItem()
     {
         Item temp = EquippedItem;

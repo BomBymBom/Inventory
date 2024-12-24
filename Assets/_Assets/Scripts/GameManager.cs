@@ -1,9 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Central manager providing global access to PlayerInventory, PlayerEquipment, PlayerCharacter, and utility functions.
-/// Attach this to a GameObject in the scene. 
-/// </summary>
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }

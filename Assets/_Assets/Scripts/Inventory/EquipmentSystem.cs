@@ -4,7 +4,6 @@ using UnityEngine;
 
 /// <summary>
 /// Manages the equipped items on a character. 
-/// For example: a dictionary from ItemType (like Weapon, Armor) to a specific EquipmentSlot.
 /// </summary>
 public class EquipmentSystem
 {
@@ -16,7 +15,6 @@ public class EquipmentSystem
     {
         equipmentSlots = new Dictionary<ItemType, EquipmentSlot>();
 
-        // For simplicity, let's say we have a few predefined slots:
         equipmentSlots[ItemType.Weapon] = new EquipmentSlot(ItemType.Weapon);
         equipmentSlots[ItemType.Armor] = new EquipmentSlot(ItemType.Armor);
     }

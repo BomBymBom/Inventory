@@ -13,7 +13,6 @@ public class ItemConfigUI : MonoBehaviour
     {
         currentItemData = itemData;
 
-        // Actualizează UI-ul cu datele item-ului
         stackableToggle.isOn = currentItemData.IsStackable;
         maxStackInput.text = currentItemData.MaxStackCount.ToString();
     }

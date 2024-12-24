@@ -34,7 +34,7 @@ public class InventoryUI : MonoBehaviour
 
             playerInventory.OnInventoryChanged += UpdateUI;
         }
-        // Creăm sloturile UI în funcție de câte sloturi are inventarul
+
         var slots = playerInventory.GetSlots();
         foreach (var slot in slots)
         {
@@ -47,7 +47,6 @@ public class InventoryUI : MonoBehaviour
         UpdateUI();
     }
 
-    // UpdateUI va reîmprospăta toate sloturile UI
     public void UpdateUI()
     {
         foreach (var slotUI in slotUIs)
