@@ -31,13 +31,16 @@ public class Inventory
     public bool AddItem(Item item, int count)
     {
         // First, try to stack into existing slots of the same item type
-        foreach (var slot in slots)
+        if (item.IsStackable)
         {
-            if (slot.StoredItem != null && slot.StoredItem.ItemName == item.ItemName)
+            foreach (var slot in slots)
             {
-                int added = slot.AddItem(item, count);
-                count -= added;
-                if (count <= 0) break;
+                if (slot.StoredItem != null && slot.StoredItem.ItemName == item.ItemName)
+                {
+                    int added = slot.AddItem(item, count);
+                    count -= added;
+                    if (count <= 0) break;
+                }
             }
         }
 
@@ -72,6 +75,7 @@ public class Inventory
     public int RemoveItem(Item item, int count)
     {
         int removedCount = 0;
+
         foreach (var slot in slots)
         {
             if (slot.StoredItem == item)
@@ -82,7 +86,6 @@ public class Inventory
                 if (count <= 0) break;
             }
         }
-
 
         OnInventoryChanged?.Invoke();
 
@@ -109,4 +112,30 @@ public class Inventory
     {
         OnInventoryChanged?.Invoke();
     }
+
+    public void ReorganizeInventory(ItemType itemType)
+    {
+        // Creăm o listă temporară pentru a stoca obiectele și cantitățile lor
+        List<(Item item, int quantity)> itemsToReorganize = new List<(Item, int)>();
+
+        // Găsește toate obiectele de tipul specificat
+        foreach (var slot in slots)
+        {
+            if (!slot.IsEmpty() && slot.StoredItem.ItemType == itemType)
+            {
+                itemsToReorganize.Add((slot.StoredItem, slot.CurrentStackCount));
+                slot.RemoveItem(slot.CurrentStackCount); // Golește slotul
+            }
+        }
+
+        // Re-adaugă obiectele găsite
+        foreach (var (item, quantity) in itemsToReorganize)
+        {
+            AddItem(item, quantity);
+        }
+
+        // Notificăm că inventarul a fost modificat
+        OnInventoryChanged?.Invoke();
+    }
+
 }

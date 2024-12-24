@@ -12,15 +12,21 @@ public class Item
     public ItemType ItemType { get; private set; }
     public int MaxStackCount { get; private set; }
     public GameObject ItemPrefab { get; private set; }
+    public bool IsStackable { get; private set; }
     private ItemUseData useStrategy;
+    private ItemData itemData;
 
-    public Item(string itemName, Sprite icon, ItemType itemType, int maxStackCount, GameObject itemPrefab)
+    public ItemData ItemData => itemData;
+
+    public Item(string itemName, Sprite icon, ItemType itemType, int maxStackCount, GameObject itemPrefab, bool isStackable, ItemData itemData)
     {
         this.ItemName = itemName;
         this.ItemIcon = icon;
         this.ItemType = itemType;
         this.MaxStackCount = maxStackCount;
         this.ItemPrefab = itemPrefab;
+        this.IsStackable = isStackable;
+        this.itemData = itemData;
     }
 
     public void SetUseStrategy(ItemUseData strategy)
@@ -44,5 +50,11 @@ public class Item
             Debug.LogWarning($"No use strategy set for item {ItemName}. Item not used.");
             return false;
         }
+    }
+
+    public void UpdateFromItemData(ItemData itemData)
+    {
+        MaxStackCount = itemData.MaxStackCount;
+        IsStackable = itemData.IsStackable;
     }
 }

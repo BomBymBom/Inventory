@@ -16,8 +16,8 @@ public class UIPanel : MonoBehaviour
         if (panelManager == null)
             panelManager = FindFirstObjectByType<PanelManager>();
 
-        gameObject.SetActive(false);
         isOpen = false;
+        gameObject.SetActive(false);
     }
 
     /// <summary>

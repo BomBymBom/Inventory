@@ -1,14 +1,19 @@
 
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Character : MonoBehaviour
 {
-    public int Health { get; set; }
-    public int MaxHealth { get; set; }
+    private int Health = 20;
+    private int MaxHealth = 100;
+
+    [Header("UI Elements")]
+    [SerializeField] private Slider healthSlider;
+    [SerializeField] private TMP_Text healthText;
 
     [Header("Equipment")]
     [SerializeField] private EquipmentSystem equipmentSystem;
-    // Referințe la game object-ul personajului
     [SerializeField] private GameObject weapon;
     [SerializeField] private GameObject armor;
     private void OnEnable()
@@ -20,6 +25,7 @@ public class Character : MonoBehaviour
         {
             equipmentSystem.OnEquipmentChanged += UpdateModel;
         }
+        UpdateHealthUI();
     }
 
     private void OnDisable()
@@ -32,24 +38,20 @@ public class Character : MonoBehaviour
 
     private void UpdateModel()
     {
-        // 1. Verificăm item-ul echipat la slot-ul "Weapon"
         var weaponSlot = equipmentSystem.GetEquipmentSlot(ItemType.Weapon);
         if (weaponSlot != null && weaponSlot.EquippedItem != null)
         {
             weapon.SetActive(true);
-            // Sau schimbi mesh / sprite
         }
         else
         {
             weapon.SetActive(false);
         }
 
-        // 2. Verificăm item-ul echipat la slot-ul "Armor"
         var armorSlot = equipmentSystem.GetEquipmentSlot(ItemType.Armor);
         if (armorSlot != null && armorSlot.EquippedItem != null)
         {
             armor.SetActive(true);
-            // ... alte schimbări, gen material, mesh etc.
         }
         else
         {
@@ -59,6 +61,20 @@ public class Character : MonoBehaviour
     public void RestoreHealth(int amount)
     {
         Health = Mathf.Min(Health + amount, MaxHealth);
+        UpdateHealthUI();
         Debug.Log("Character healed, current health: " + Health);
+    }
+    private void UpdateHealthUI()
+    {
+        if (healthSlider != null)
+        {
+            healthSlider.maxValue = MaxHealth;
+            healthSlider.value = Health;
+        }
+
+        if (healthText != null)
+        {
+            healthText.text = $"{Health} / {MaxHealth}";
+        }
     }
 }

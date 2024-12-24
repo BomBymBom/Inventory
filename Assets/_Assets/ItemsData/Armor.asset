@@ -18,3 +18,4 @@ MonoBehaviour:
   maxStackCount: 1
   itemPrefab: {fileID: 8290567115996754634, guid: 602a864706441794e874fd934eb39083, type: 3}
   itemUseData: {fileID: 11400000, guid: cb16e153d7090ea4e8fb20f67b2dd122, type: 2}
+  isStackable: 0

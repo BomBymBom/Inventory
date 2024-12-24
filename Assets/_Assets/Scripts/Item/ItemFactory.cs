@@ -40,7 +40,9 @@ public class ItemFactory : MonoBehaviour
                 icon: data.ItemIcon,
                 itemType: data.ItemType,
                 maxStackCount: data.MaxStackCount,
-                itemPrefab: data.ItemPrefab
+                itemPrefab: data.ItemPrefab,
+                isStackable: data.IsStackable,
+                  itemData: data
             );
 
             // Assign use data if available
@@ -54,7 +56,7 @@ public class ItemFactory : MonoBehaviour
 
         Debug.LogWarning($"No ItemData found for ItemType {type}. Returning a generic item.");
         // If no data found, return a generic item or null.
-        return new Item("Generic Item", null, ItemType.None, 1, new GameObject());
+        return null;
     }
 
 }

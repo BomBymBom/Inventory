@@ -254,7 +254,7 @@
                     "path": "<Keyboard>/i",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "ToggleInventory",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -307,7 +307,7 @@
                     "id": "6a55ff87-f1a8-413c-9b61-de930517d9fd",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Tap",
                     "initialStateCheck": false
                 },
                 {
@@ -669,7 +669,7 @@
                     "path": "<Mouse>/middleButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
+                    "groups": "Keyboard&Mouse;KeyboardMouse",
                     "action": "MiddleClick",
                     "isComposite": false,
                     "isPartOfComposite": false

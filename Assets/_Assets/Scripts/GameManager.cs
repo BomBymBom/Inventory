@@ -30,20 +30,11 @@ public class GameManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // If playerInventory, playerEquipment, or itemFactory are not assigned in the Inspector,
-        // we could create defaults here. For example:
-        if (playerInventory == null)
-        {
-            playerInventory = new Inventory(12); // 12 slots as an example
-        }
+        int maxInventorySyze = 12;
 
-        if (playerEquipment == null)
-        {
-            playerEquipment = new EquipmentSystem();
-        }
+        playerInventory = new Inventory(maxInventorySyze);
 
-        // itemFactory should be assigned in inspector. If not, you could find it in the scene:
-        // itemFactory = FindObjectOfType<ItemFactory>();
+        playerEquipment = new EquipmentSystem();
     }
 
 

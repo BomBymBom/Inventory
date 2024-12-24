@@ -12,7 +12,8 @@ public class ItemSpawner : MonoBehaviour
 
     [SerializeField] private ItemSpawnData[] itemsToSpawn; // Lista de obiecte care trebuie spaunate
     [SerializeField] private List<Transform> spawnPoints;  // Lista de puncte de spaunare
-
+    [SerializeField] private Transform parent;
+    private List<Item> allItems = new List<Item>();
     public void InitializeSpawner()
     {
         List<Transform> availablePoints = new List<Transform>(spawnPoints);
@@ -46,6 +47,7 @@ public class ItemSpawner : MonoBehaviour
             return;
         }
 
+        allItems.Add(item);
         // Generează prefab-ul asociat cu tipul de obiect
         var prefab = item.ItemPrefab; // Verificăm că prefab-ul este configurat corect
         if (prefab == null)
@@ -55,7 +57,7 @@ public class ItemSpawner : MonoBehaviour
         }
 
         // Instanțiază prefab-ul în scenă
-        var spawnedObject = Instantiate(prefab, spawnPoint.position, Quaternion.identity);
+        var spawnedObject = Instantiate(prefab, spawnPoint.position, Quaternion.identity, parent);
         var itemPickup = spawnedObject.GetComponent<ItemPickup>();
         if (itemPickup != null)
         {
@@ -93,6 +95,17 @@ public class ItemSpawner : MonoBehaviour
         else
         {
             Debug.LogError($"Prefab {item.ItemPrefab.name} does not have an ItemPickup component!");
+        }
+    }
+
+    public void UpdateItems(ItemData updatedData)
+    {
+        foreach (var item in allItems)
+        {
+            if (item.ItemType == updatedData.ItemType)
+            {
+                item.UpdateFromItemData(updatedData);
+            }
         }
     }
 }

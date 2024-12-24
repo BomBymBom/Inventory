@@ -9,10 +9,11 @@ public class UIInputManager : MonoBehaviour
     [SerializeField] private Canvas parentCanvas;
     [SerializeField] private GraphicRaycaster raycaster;
     [SerializeField] private PlayerInput inputActionsAsset;
-
+    [SerializeField] private GameObject configWindow;
     private InputAction pointAction;
     private InputAction leftClickAction;
     private InputAction rightClickAction;
+    private InputAction openConfigAction;
 
     // Variabilă ce stochează permanent poziția cursorului (actualizată la pointAction.performed)
     private Vector2 currentPointerPos;
@@ -23,6 +24,7 @@ public class UIInputManager : MonoBehaviour
     private InventorySlot originalSlot;
     private ItemType originalEquipSlotType;
     private bool dragging = false;
+    private bool isConfigOpen = false;
 
     private void Awake()
     {
@@ -34,7 +36,8 @@ public class UIInputManager : MonoBehaviour
         pointAction = uiMap.FindAction("Point", true);
         leftClickAction = uiMap.FindAction("Click", true);
         rightClickAction = uiMap.FindAction("RightClick", true);
-
+        openConfigAction = uiMap.FindAction("MiddleClick", true);
+        openConfigAction.started += OnOpenConfigPerformed;
         // 3. Ne abonăm la evenimente
         // Point: citim poziția cursorului la fiecare "performed"
         pointAction.performed += OnPointPerformed;
@@ -60,7 +63,8 @@ public class UIInputManager : MonoBehaviour
             leftClickAction.started -= OnLeftClickStarted;
             leftClickAction.canceled -= OnLeftClickCanceled;
         }
-        if (rightClickAction != null) rightClickAction.performed -= OnRightClickPerformed;
+        if (rightClickAction != null) rightClickAction.started -= OnRightClickPerformed;
+        if (openConfigAction != null) openConfigAction.performed -= OnOpenConfigPerformed;
     }
 
     // ---------------------------------------------------------------------------------
@@ -82,6 +86,15 @@ public class UIInputManager : MonoBehaviour
     private void OnLeftClickStarted(InputAction.CallbackContext context)
     {
         Debug.Log("LeftClickStart");
+        if (configWindow.activeSelf && !IsPointerOverConfigUI())
+        {
+            CloseConfigWindow();
+            return;
+        }
+        else if (IsPointerOverConfigUI())
+        {
+            return;
+        }
 
         // Începem drag dacă am dat click pe un slot cu item
         // Folosim currentPointerPos, actualizat în OnPointPerformed
@@ -133,6 +146,15 @@ public class UIInputManager : MonoBehaviour
     // ---------------------------------------------------------------------------------
     private void OnRightClickPerformed(InputAction.CallbackContext context)
     {
+        if (configWindow.activeSelf && !IsPointerOverConfigUI())
+        {
+            CloseConfigWindow();
+            return;
+        }
+        else if (IsPointerOverConfigUI())
+        {
+            return;
+        }
         // Dacă dragăm ceva, ignorăm right-click
         if (dragging) return;
         // Verificăm slotUI sub cursor
@@ -197,6 +219,7 @@ public class UIInputManager : MonoBehaviour
 
     private void EndDraggingItem(Vector2 cursorPos)
     {
+
         // Verificăm unde am lăsat item-ul
         Debug.Log("EndDraggingItem");
 
@@ -294,7 +317,83 @@ public class UIInputManager : MonoBehaviour
 
         GameManager.Instance.PlayerInventory?.ForceInventoryUpdate();
     }
+    private void OnOpenConfigPerformed(InputAction.CallbackContext context)
+    {
+        if (isConfigOpen)
+        {
+            CloseConfigWindow();
+            return;
+        }
 
+        // Detectează slotul pe care s-a făcut click
+        InventorySlotUI slotUI = RaycastFor<InventorySlotUI>(currentPointerPos);
+        EquipmentSlotUI equipUI = (slotUI == null) ? RaycastFor<EquipmentSlotUI>(currentPointerPos) : null;
+
+        if (slotUI == null && equipUI == null)
+        {
+            Debug.LogWarning("No item selected for configuration.");
+            return;
+        }
+
+        // Obține item-ul din slot sau echipament
+        ItemData selectedItemData = null;
+
+        if (slotUI != null && slotUI.Slot?.StoredItem != null)
+        {
+            selectedItemData = slotUI.Slot.StoredItem.ItemData;
+        }
+        else if (equipUI != null && GameManager.Instance.PlayerEquipment.GetEquipmentSlot(equipUI.SlotType)?.EquippedItem != null)
+        {
+            selectedItemData = GameManager.Instance.PlayerEquipment.GetEquipmentSlot(equipUI.SlotType).EquippedItem.ItemData;
+        }
+
+        if (selectedItemData == null)
+        {
+            Debug.LogWarning("No valid item found for configuration.");
+            return;
+        }
+
+        // Configurează UI-ul
+        var itemConfigUI = configWindow.GetComponent<ItemConfigUI>();
+        itemConfigUI.SetItemData(selectedItemData);
+
+        // Setează poziția ferestrei UI lângă mouse
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+        RectTransform rectTransform = configWindow.GetComponent<RectTransform>();
+        rectTransform.position = mousePosition;
+
+        // Activează fereastra
+        configWindow.SetActive(true);
+        isConfigOpen = true;
+    }
+
+    private void CloseConfigWindow()
+    {
+        if (!isConfigOpen && !IsPointerOverConfigUI()) return;
+
+        configWindow.SetActive(false);
+        isConfigOpen = false;
+        Debug.Log("Config window closed.");
+    }
+    private bool IsPointerOverConfigUI()
+    {
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = Mouse.current.position.ReadValue()
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        raycaster.Raycast(pointerData, results);
+
+        foreach (var result in results)
+        {
+            if (result.gameObject == configWindow || result.gameObject.transform.IsChildOf(configWindow.transform))
+            {
+                return true; // Cursorul este peste fereastră
+            }
+        }
+        return false; // Cursorul nu este peste fereastră
+    }
     private T RaycastFor<T>(Vector2 screenPos) where T : Component
     {
         var pointerData = new PointerEventData(EventSystem.current)

@@ -22,12 +22,12 @@ public class InventoryPanel : UIPanel
         // *** UI map ***
         var uiMap = panelManager.PlayerInput.actions.FindActionMap("UI", true);
         var uiToggleAction = uiMap.FindAction("ToggleInventory", false);
-        if (uiToggleAction != null)
-        {
-            uiToggleAction.performed += OnToggleInventory;
-            uiToggleAction.Enable();
-            uiMap?.Enable();
-        }
+        // if (uiToggleAction != null)
+        // {
+        uiToggleAction.performed += OnToggleInventory;
+        // uiToggleAction.Enable();
+        // uiMap?.Enable();
+        // }
     }
 
     private void OnDestroy()
