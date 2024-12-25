@@ -24,7 +24,20 @@
 
 
 
-Basic Controls:
+*** Instructions for Running the Project ***
+Clone this repository to your local machine:
+
+git clone https://github.com/user/repo-name.git
+
+Open the project in Unity (recommended version: Unity 2022.3.46f).
+
+Navigate to the main scene located at:
+Assets/_Assets/Scenes/MainScene.unity
+
+Click the Play button in the Unity Editor to start testing the project.
+
+
+*** Basic Controls ***
 - W/A/S/D - Move the character.
 - I - Open inventory.
 - Left Mouse Button (Click) - Select objects.
